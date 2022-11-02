@@ -3,11 +3,14 @@ package com.cieep.a05_ejercicio_lista_compra;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.cieep.a05_ejercicio_lista_compra.adapters.ProductosAdapter;
 import com.cieep.a05_ejercicio_lista_compra.modelos.Producto;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private ArrayList<Producto> productosList;
+    private ProductosAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
 
     @Override
@@ -43,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
 
         productosList = new ArrayList<>();
+
+        adapter = new ProductosAdapter(productosList, R.layout.producto_view_holder, this);
+        layoutManager = new GridLayoutManager(this, 1);
+
+        binding.contentMain.contenedor.setLayoutManager(layoutManager);
+        binding.contentMain.contenedor.setAdapter(adapter);
 
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
                                                 Integer.parseInt(txtCantidad.getText().toString()),
                                                 Float.parseFloat(txtPrecio.getText().toString())
                                                 );
-                    productosList.add(producto);
+                    productosList.add(0, producto);
+                    adapter.notifyItemInserted(0);
                 }
                 else {
                     Toast.makeText(MainActivity.this, "Faltan Datos", Toast.LENGTH_SHORT).show();
