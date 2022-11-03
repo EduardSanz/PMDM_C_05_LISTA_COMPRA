@@ -7,11 +7,14 @@ import com.cieep.a05_ejercicio_lista_compra.adapters.ProductosAdapter;
 import com.cieep.a05_ejercicio_lista_compra.modelos.Producto;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.PersistableBundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -130,4 +133,19 @@ public class MainActivity extends AppCompatActivity {
 
         return builder.create();
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("LISTA", productosList);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        productosList.addAll( (ArrayList<Producto>) savedInstanceState.getSerializable("LISTA") );
+        adapter.notifyItemRangeInserted(0, productosList.size());
+    }
+
+
 }
