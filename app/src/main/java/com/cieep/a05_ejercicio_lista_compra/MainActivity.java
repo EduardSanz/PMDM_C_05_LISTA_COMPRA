@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog createProducto() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Agregar Producto a la cesta");
+        builder.setTitle(getResources().getString(R.string.alert_add_title));
         builder.setCancelable(false);
 
         View productoViewModel = LayoutInflater.from(this).inflate(R.layout.producto_view_model, null);
@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
         txtCantidad.addTextChangedListener(textWatcher);
         txtPrecio.addTextChangedListener(textWatcher);
 
-        builder.setNegativeButton("CANCELAR", null);
-        builder.setPositiveButton("AGREGAR", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.alert_cancel_button, null);
+        builder.setPositiveButton(R.string.alert_add_ok_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!txtNombre.getText().toString().isEmpty() && !txtCantidad.getText().toString().isEmpty() &&

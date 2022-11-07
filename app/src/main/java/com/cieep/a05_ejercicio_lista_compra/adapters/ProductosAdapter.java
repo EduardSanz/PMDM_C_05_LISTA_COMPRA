@@ -112,7 +112,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
 
     private androidx.appcompat.app.AlertDialog updateProducto(Producto producto) {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
-        builder.setTitle("Editar Producto de la cesta");
+        builder.setTitle(R.string.alert_edit_title);
         builder.setCancelable(false);
 
         View productoViewModel = LayoutInflater.from(context).inflate(R.layout.producto_view_model, null);
@@ -158,8 +158,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         txtPrecio.setText(String.valueOf(producto.getImporte()));
         txtNombre.setText(producto.getNombre());
 
-        builder.setNegativeButton("CANCELAR", null);
-        builder.setPositiveButton("UPDATE", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.alert_cancel_button, null);
+        builder.setPositiveButton(R.string.alert_edit_ok_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!txtNombre.getText().toString().isEmpty() && !txtCantidad.getText().toString().isEmpty() &&
@@ -188,7 +188,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         builder.setTitle("SEGUROOOOOOOO???????");
         builder.setCancelable(false);
         TextView textView = new TextView(context);
-        textView.setText("Esta Acción no se puede deshacer");
+        textView.setText(R.string.alert_aviso);
         textView.setTextColor(Color.RED);
         textView.setTextSize(24);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
