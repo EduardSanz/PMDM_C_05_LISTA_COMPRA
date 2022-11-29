@@ -1,9 +1,11 @@
 package com.cieep.a05_ejercicio_lista_compra;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.cieep.a05_ejercicio_lista_compra.adapters.ProductosAdapter;
+import com.cieep.a05_ejercicio_lista_compra.configuraciones.Constantes;
 import com.cieep.a05_ejercicio_lista_compra.modelos.Producto;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -23,6 +25,8 @@ import android.view.View;
 
 
 import com.cieep.a05_ejercicio_lista_compra.databinding.ActivityMainBinding;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Type;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -41,23 +46,30 @@ public class MainActivity extends AppCompatActivity {
     private ProductosAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private SharedPreferences spDatos;
+    private Gson gson;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
+
+        spDatos = getSharedPreferences(Constantes.DATOS, MODE_PRIVATE);
+        gson = new Gson();
+
+
 
         productosList = new ArrayList<>();
 
         adapter = new ProductosAdapter(productosList, R.layout.producto_view_holder, this);
         layoutManager = new GridLayoutManager(this, 1);
-
         binding.contentMain.contenedor.setLayoutManager(layoutManager);
         binding.contentMain.contenedor.setAdapter(adapter);
 
+        leerDatos();
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +78,17 @@ public class MainActivity extends AppCompatActivity {
                 createProducto().show();
             }
         });
+    }
+
+    private void leerDatos() {
+        if (spDatos.contains(Constantes.LISTA_PRODUCTOS)) {
+            String productosJSON = spDatos.getString(Constantes.LISTA_PRODUCTOS, "[]");
+            Type tipo = new TypeToken< ArrayList<Producto> >(){}.getType();
+            ArrayList<Producto> temp = gson.fromJson(productosJSON, tipo);
+            productosList.clear();
+            productosList.addAll(temp);
+            adapter.notifyItemRangeInserted(0, productosList.size());
+        }
     }
 
     private AlertDialog createProducto() {
@@ -123,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                                                 );
                     productosList.add(0, producto);
                     adapter.notifyItemInserted(0);
+                    guardarInformacion();
                 }
                 else {
                     Toast.makeText(MainActivity.this, "Faltan Datos", Toast.LENGTH_SHORT).show();
@@ -132,6 +156,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         return builder.create();
+    }
+
+    private void guardarInformacion() {
+        String productosJSON = gson.toJson(productosList);
+        SharedPreferences.Editor editor = spDatos.edit();
+        editor.putString(Constantes.LISTA_PRODUCTOS, productosJSON);
+        editor.apply();
     }
 
     @Override
@@ -146,6 +177,5 @@ public class MainActivity extends AppCompatActivity {
         productosList.addAll( (ArrayList<Producto>) savedInstanceState.getSerializable("LISTA") );
         adapter.notifyItemRangeInserted(0, productosList.size());
     }
-
 
 }
