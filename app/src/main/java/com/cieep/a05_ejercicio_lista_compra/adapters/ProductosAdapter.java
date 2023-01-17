@@ -35,16 +35,14 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     private int fila;
     private Context context;
 
-    private SharedPreferences spDatos;
-    private Gson gson;
+
 
     public ProductosAdapter(List<Producto> objects, int fila, Context context) {
         this.objects = objects;
         this.fila = fila;
         this.context = context;
 
-        this.spDatos = context.getSharedPreferences(Constantes.DATOS, Context.MODE_PRIVATE);
-        this.gson = new Gson();
+
     }
 
     @NonNull
@@ -180,7 +178,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
                     producto.actualizaTotal();
 
                     notifyItemChanged(objects.indexOf(producto));
-                    guardarInformacion();
+
                 }
                 else {
                     Toast.makeText(context, "Faltan Datos", Toast.LENGTH_SHORT).show();
@@ -215,18 +213,12 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
                 int posicion = objects.indexOf(producto);
                 objects.remove(producto);
                 notifyItemRemoved(posicion);
-                guardarInformacion();
             }
         });
         return builder.create();
     }
 
-    private void guardarInformacion() {
-        String productosJSON = gson.toJson(objects);
-        SharedPreferences.Editor editor = spDatos.edit();
-        editor.putString(Constantes.LISTA_PRODUCTOS, productosJSON);
-        editor.apply();
-    }
+
 
     public class ProductoVH extends RecyclerView.ViewHolder {
 
