@@ -1,6 +1,7 @@
 package com.cieep.a05_ejercicio_lista_compra.modelos;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 
 public class Producto implements Serializable {
 
@@ -8,6 +9,29 @@ public class Producto implements Serializable {
     private int cantidad;
     private float importe;
     private float total;
+
+    private static final NumberFormat nfMoneda;
+    private static final NumberFormat nfNumero;
+
+    static {
+        nfMoneda = NumberFormat.getCurrencyInstance();
+        nfNumero = NumberFormat.getNumberInstance();
+    }
+
+    public String getCantidadNumero() {
+        return nfNumero.format(this.cantidad);
+    }
+
+    public String getImporteMoneda() {
+        return nfMoneda.format(this.importe);
+    }
+
+    private String getTotalMoneda() {
+        return nfMoneda.format(this.total);
+    }
+
+    public Producto() {
+    }
 
     public Producto(String nombre, int cantidad, float importe) {
         this.nombre = nombre;

@@ -1,6 +1,7 @@
 package com.cieep.a05_ejercicio_lista_compra;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -25,6 +26,13 @@ import android.view.View;
 
 
 import com.cieep.a05_ejercicio_lista_compra.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -46,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
     private ProductosAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,18 +64,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 
-
-
-
+        database = FirebaseDatabase.getInstance("https://ejercicio04-agendacontactos-c-default-rtdb.firebaseio.com/");
+        reference = database.getReference(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("lista");
 
         productosList = new ArrayList<>();
 
-        adapter = new ProductosAdapter(productosList, R.layout.producto_view_holder, this);
+        adapter = new ProductosAdapter(productosList, R.layout.producto_view_holder, this, reference);
         layoutManager = new GridLayoutManager(this, 1);
         binding.contentMain.contenedor.setLayoutManager(layoutManager);
         binding.contentMain.contenedor.setAdapter(adapter);
 
 
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                productosList.clear();
+                if (snapshot.exists()) {
+                    GenericTypeIndicator< ArrayList<Producto> > gti = new GenericTypeIndicator<ArrayList<Producto>>() {};
+                    productosList.addAll(snapshot.getValue(gti));
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
                                                 Float.parseFloat(txtPrecio.getText().toString())
                                                 );
                     productosList.add(0, producto);
-                    adapter.notifyItemInserted(0);
+                    // adapter.notifyItemInserted(0);
+                    reference.setValue(productosList);
 
                 }
                 else {
@@ -144,4 +171,24 @@ public class MainActivity extends AppCompatActivity {
         return builder.create();
     }
 
+    // ----- Menu -----
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_logout, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.btnSalir) {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+        return true;
+    }
 }

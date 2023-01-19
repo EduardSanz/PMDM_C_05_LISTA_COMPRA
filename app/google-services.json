@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "213592610111",
+    "firebase_url": "https://ejercicio04-agendacontactos-c-default-rtdb.firebaseio.com",
+    "project_id": "ejercicio04-agendacontactos-c",
+    "storage_bucket": "ejercicio04-agendacontactos-c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213592610111:android:e954200434171fe6a72f8a",
+        "android_client_info": {
+          "package_name": "com.cieep.a05_ejercicio_lista_compra"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213592610111-8jbs2odith1jaihsfh6lfqtmih78qimf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQMKTeY962Mam6FkvbLug3PtpqK0hIgZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213592610111-8jbs2odith1jaihsfh6lfqtmih78qimf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:213592610111:android:9849cdaa8d746f20a72f8a",
+        "android_client_info": {
+          "package_name": "es.eduardsanz.ejercicio04_agendadecontactos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "213592610111-8jbs2odith1jaihsfh6lfqtmih78qimf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQMKTeY962Mam6FkvbLug3PtpqK0hIgZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "213592610111-8jbs2odith1jaihsfh6lfqtmih78qimf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,7 +3,6 @@ package com.cieep.a05_ejercicio_lista_compra.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,9 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cieep.a05_ejercicio_lista_compra.R;
-import com.cieep.a05_ejercicio_lista_compra.configuraciones.Constantes;
 import com.cieep.a05_ejercicio_lista_compra.modelos.Producto;
-import com.google.gson.Gson;
+import com.google.firebase.database.DatabaseReference;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -34,15 +32,15 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     private List<Producto> objects;
     private int fila;
     private Context context;
+    private DatabaseReference reference;
 
 
 
-    public ProductosAdapter(List<Producto> objects, int fila, Context context) {
+    public ProductosAdapter(List<Producto> objects, int fila, Context context, DatabaseReference reference) {
         this.objects = objects;
         this.fila = fila;
         this.context = context;
-
-
+        this.reference = reference;
     }
 
     @NonNull
@@ -60,7 +58,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     public void onBindViewHolder(@NonNull ProductoVH holder, int position) {
         Producto producto = objects.get(position);
         holder.lblNombre.setText(producto.getNombre());
-        holder.txtCantidad.setText(String.valueOf(producto.getCantidad()));
+        holder.txtCantidad.setText(producto.getCantidadNumero());
 
         holder.btnEliminar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,8 +175,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
                     producto.setNombre(txtNombre.getText().toString());
                     producto.actualizaTotal();
 
-                    notifyItemChanged(objects.indexOf(producto));
-
+                    // notifyItemChanged(objects.indexOf(producto));
+                    reference.setValue(objects);
                 }
                 else {
                     Toast.makeText(context, "Faltan Datos", Toast.LENGTH_SHORT).show();
@@ -212,7 +210,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
             public void onClick(DialogInterface dialogInterface, int i) {
                 int posicion = objects.indexOf(producto);
                 objects.remove(producto);
-                notifyItemRemoved(posicion);
+                // notifyItemRemoved(posicion);
+                reference.setValue(objects);
             }
         });
         return builder.create();
